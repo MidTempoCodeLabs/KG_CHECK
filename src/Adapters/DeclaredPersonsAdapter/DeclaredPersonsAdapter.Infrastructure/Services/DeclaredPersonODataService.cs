@@ -1,15 +1,10 @@
-﻿using Adapters.Shared.Constants;
-using AutoMapper;
+﻿using AutoMapper;
 using DeclaredPersonsAdapter.Application.Interfaces.Repositories;
 using DeclaredPersonsAdapter.Application.Interfaces.Services;
 using DeclaredPersonsAdapter.Application.Responses.DeclaredPersons.Get;
-using EPakapojumiDataServiceContext;
 using Microsoft.Extensions.Logging;
-using Microsoft.OData.Client;
-using Microsoft.OData;
 using Shared.Wrapper;
 using Shared.Wrapper.Interfaces;
-using Simple.OData.Client;
 
 namespace DeclaredPersonsAdapter.Infrastructure.Services;
 

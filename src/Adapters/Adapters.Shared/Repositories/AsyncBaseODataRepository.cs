@@ -1,8 +1,5 @@
-﻿using EPakapojumiDataServiceContext;
-using System.Data.Services.Client;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using Simple.OData.Client;
-using Adapters.Shared.Constants;
 
 namespace Adapters.Shared.Repositories;
 

@@ -1,7 +1,7 @@
 ﻿using DeclaredPersonsAdapter.Application.Interfaces.Services;
+using DeclaredPersonsAnalyzer.CommandLineHelpers.Options;
+using Fclp;
 using Newtonsoft.Json;
-using System.IO;
-using System.Text.Json;
 
 namespace DeclaredPersonsAnalyzer;
 
@@ -14,8 +14,10 @@ public class AppRunnerService : IAppRunnerService
         _declaredPersonODataService = declaredPersonODataService;
     }
 
-    public async Task RunAsync()
+    public async Task RunAsync(DeclaredPersonAnalyserOptions? declaredPersonAnalyserOptions)
     {
+        var ss = declaredPersonAnalyserOptions;
+
         var response = await _declaredPersonODataService.GetAll();
         if (response.Succeeded)
         {
@@ -37,5 +39,5 @@ public class AppRunnerService : IAppRunnerService
 
 public interface IAppRunnerService
 {
-    Task RunAsync();
+    Task RunAsync(DeclaredPersonAnalyserOptions? declaredPersonsAnalyserCmdParseResult);
 }

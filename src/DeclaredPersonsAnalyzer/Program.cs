@@ -1,5 +1,6 @@
 ﻿using Application.Extensions;
 using DeclaredPersonsAnalyzer.Extensions;
+using Fclp;
 using Infrastructure.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,6 +8,8 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 using ILogger = Serilog.ILogger;
+using DeclaredPersonsAnalyzer.CommandLineHelpers.Options;
+using DeclaredPersonsAnalyzer.CommandLineHelpers.Setups;
 
 namespace DeclaredPersonsAnalyzer;
 
@@ -14,6 +17,7 @@ public class Program
 {
     public static async Task Main(string[] args)
     {
+
         var builder = new ConfigurationBuilder();
         BuildConfig(builder);
 
@@ -43,8 +47,12 @@ public class Program
                 .UseSerilog()
                 .Build();
 
+            var declaredPersonsAnalyserCmdParams =
+                DeclaredPersonAnalyserCommandLineParserSetup.GetParsedCmdInputParameters(args);
+
+
             var entryPoint = ActivatorUtilities.CreateInstance<AppRunnerService>(host.Services);
-            await entryPoint.RunAsync();
+            await entryPoint.RunAsync(declaredPersonsAnalyserCmdParams);
         }
         catch (Exception ex)
         {
