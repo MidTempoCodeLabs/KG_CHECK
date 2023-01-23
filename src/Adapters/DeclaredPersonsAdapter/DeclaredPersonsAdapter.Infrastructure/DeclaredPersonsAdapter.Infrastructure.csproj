@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+	<ItemGroup>
+    <ProjectReference Include="..\..\..\Application\Application.csproj" />
+    <ProjectReference Include="..\DeclaredPersonsAdapter.Application\DeclaredPersonsAdapter.Application.csproj" />
+  </ItemGroup>
+
 </Project>
