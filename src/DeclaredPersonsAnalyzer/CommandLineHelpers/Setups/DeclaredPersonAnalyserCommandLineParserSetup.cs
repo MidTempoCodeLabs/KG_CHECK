@@ -1,4 +1,5 @@
-﻿using DeclaredPersonsAnalyzer.CommandLineHelpers.Options;
+﻿using DeclaredPersonsAnalyzer.CommandLineHelpers.Constants;
+using DeclaredPersonsAnalyzer.CommandLineHelpers.Options;
 using Fclp;
 
 namespace DeclaredPersonsAnalyzer.CommandLineHelpers.Setups;
@@ -8,6 +9,15 @@ internal class DeclaredPersonAnalyserCommandLineParserSetup
     public static DeclaredPersonAnalyserOptions? GetParsedCmdInputParameters(string[] args)
     {
         var parser = new FluentCommandLineParser<DeclaredPersonAnalyserOptions>();
+
+        parser.Setup(arg => arg.Source)
+            .As(
+                nameof(DeclaredPersonAnalyserOptions.Source).ToLower()[0],
+                nameof(DeclaredPersonAnalyserOptions.Source).ToLower()
+            )
+            .WithDescription("The service address")
+            .SetDefault(CommandLineParamsConstants.DeclaredPersonAnalyzer.Source);
+
         parser.Setup(arg => arg.District)
             .As(
                 nameof(DeclaredPersonAnalyserOptions.District).ToLower()[0],
@@ -20,9 +30,22 @@ internal class DeclaredPersonAnalyserCommandLineParserSetup
             .As(
                 nameof(DeclaredPersonAnalyserOptions.Year).ToLower()[0],
                 nameof(DeclaredPersonAnalyserOptions.Year).ToLower()
-                )
-            .WithDescription("The year of record creation")
-            .Required();
+            )
+            .WithDescription("The year of record creation");
+
+        parser.Setup(arg => arg.Month)
+            .As(
+                nameof(DeclaredPersonAnalyserOptions.Month).ToLower()[0],
+                nameof(DeclaredPersonAnalyserOptions.Month).ToLower()
+            )
+            .WithDescription("The month of record creation");
+
+        parser.Setup(arg => arg.Day)
+            .As(
+                nameof(DeclaredPersonAnalyserOptions.Day).ToLower()[0],
+                nameof(DeclaredPersonAnalyserOptions.Day).ToLower()
+            )
+            .WithDescription("The day of record creation");
 
         parser.Setup(arg => arg.Limit)
             .As(
@@ -30,23 +53,21 @@ internal class DeclaredPersonAnalyserCommandLineParserSetup
                 nameof(DeclaredPersonAnalyserOptions.Limit).ToLower()
                 )
             .WithDescription("The limit of records")
-            .SetDefault(0);
+            .SetDefault(CommandLineParamsConstants.DeclaredPersonAnalyzer.Limit);
 
         parser.Setup(arg => arg.Group)
             .As(
                 nameof(DeclaredPersonAnalyserOptions.Group).ToLower()[0],
                 nameof(DeclaredPersonAnalyserOptions.Group).ToLower()
-                )
-            .WithDescription("Grouping by year and month(ym), year and day(yd) or month and day(md)")
-            .SetDefault("y");
+            )
+            .WithDescription("Allowed values: y, m, d, ym, yd, md");
 
         parser.Setup(arg => arg.Out)
             .As(
                 nameof(DeclaredPersonAnalyserOptions.Out).ToLower()[0],
                 nameof(DeclaredPersonAnalyserOptions.Out).ToLower()
-                )
-            .WithDescription("Output file name")
-            .SetDefault("res.json");
+            )
+            .WithDescription("Output file name");
 
         var result = parser.Parse(args);
 
