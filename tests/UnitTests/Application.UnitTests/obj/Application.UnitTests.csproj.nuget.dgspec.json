@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\jeconsulting\\TestTasks\\KG_CHECK\\tests\\UnitTests\\Application.UnitTests\\Application.UnitTests.csproj": {}
+    "c:\\jeconsulting\\TestTasks\\KG_CHECK\\tests\\UnitTests\\Application.UnitTests\\Application.UnitTests.csproj": {}
   },
   "projects": {
-    "C:\\jeconsulting\\TestTasks\\KG_CHECK\\tests\\UnitTests\\Application.UnitTests\\Application.UnitTests.csproj": {
+    "c:\\jeconsulting\\TestTasks\\KG_CHECK\\tests\\UnitTests\\Application.UnitTests\\Application.UnitTests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\jeconsulting\\TestTasks\\KG_CHECK\\tests\\UnitTests\\Application.UnitTests\\Application.UnitTests.csproj",
+        "projectUniqueName": "c:\\jeconsulting\\TestTasks\\KG_CHECK\\tests\\UnitTests\\Application.UnitTests\\Application.UnitTests.csproj",
         "projectName": "Application.UnitTests",
-        "projectPath": "C:\\jeconsulting\\TestTasks\\KG_CHECK\\tests\\UnitTests\\Application.UnitTests\\Application.UnitTests.csproj",
+        "projectPath": "c:\\jeconsulting\\TestTasks\\KG_CHECK\\tests\\UnitTests\\Application.UnitTests\\Application.UnitTests.csproj",
         "packagesPath": "C:\\Users\\Nikita.Nikitin\\.nuget\\packages\\",
-        "outputPath": "C:\\jeconsulting\\TestTasks\\KG_CHECK\\tests\\UnitTests\\Application.UnitTests\\obj\\",
+        "outputPath": "c:\\jeconsulting\\TestTasks\\KG_CHECK\\tests\\UnitTests\\Application.UnitTests\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

@@ -1,0 +1,59 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: .NET
+
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '6.0.300'
+
+    - name: Restore dependencies
+      run: dotnet restore App.sln
+    - name: Build
+      run: dotnet build App.sln --no-restore
+    
+    - name: Application.UnitTests
+      uses: zyborg/dotnet-tests-report@v1
+      with:
+        project_path: tests/UnitTests/Application.UnitTests
+        report_name: Application_UnitTests
+        report_title: Application Unit Tests
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        gist_name: Application_UnitTests.md
+        gist_badge_label: 'Application Unit Tests: %Counters_passed%/%Counters_total%'
+        gist_token: ${{ secrets.GIST_TOKEN }}
+
+    - name: Domain.UnitTests
+      uses: zyborg/dotnet-tests-report@v1
+      with:
+        project_path: tests/UnitTests/Domain.UnitTests
+        report_name: Domain_UnitTests
+        report_title: Domain Unit Tests
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        gist_name: Domain_UnitTests.md
+        gist_badge_label: 'Domain Unit Tests: %Counters_passed%/%Counters_total%'
+        gist_token: ${{ secrets.GIST_TOKEN }}
+
+    - name: Infrastructure.UnitTests
+      uses: zyborg/dotnet-tests-report@v1
+      with:
+        project_path: tests/UnitTests/Infrastructure.UnitTests
+        report_name: Infrastructure_UnitTests
+        report_title: Domain Unit Tests
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        gist_name: Infrastructure_UnitTests.md
+        gist_badge_label: 'Infrastructure_ Unit Tests: %Counters_passed%/%Counters_total%'
+        gist_token: ${{ secrets.GIST_TOKEN }}
