@@ -476,8 +476,9 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-bin/
-obj/
 
 .idea/
 .vs/
+
+bin/
+obj/
