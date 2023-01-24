@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DeclaredPersonsAdapter.Application.Interfaces.Repositories;
 using DeclaredPersonsAdapter.Application.Interfaces.Services;
+using DeclaredPersonsAdapter.Application.Requests.DeclaredPersonAnalyser;
 using DeclaredPersonsAdapter.Application.Responses.DeclaredPersons.Get;
 using Microsoft.Extensions.Logging;
 using Shared.Wrapper;
@@ -40,5 +41,10 @@ public class DeclaredPersonODataService : IDeclaredPersonODataService
             _logger.LogError(e.Message);
             throw;
         }
+    }
+
+    public async Task<SummaryResult<GetDeclaredPersonResponse>> GetSummary(DeclaredPersonAnalyserOptionsRequest request)
+    {
+        throw new NotImplementedException();
     }
 }
