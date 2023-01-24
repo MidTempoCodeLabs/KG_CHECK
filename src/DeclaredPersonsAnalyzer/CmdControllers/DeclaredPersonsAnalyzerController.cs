@@ -22,6 +22,8 @@ public class DeclaredPersonsAnalyzerController : IDeclaredPersonsAnalyzerControl
         {
             return await Result.FailAsync(reqValidationResult.Errors);
         }
+
+        return await Result.SuccessAsync();
     }
 }
 
