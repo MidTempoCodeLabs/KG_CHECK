@@ -1,43 +1,35 @@
-﻿using DeclaredPersonsAdapter.Application.Interfaces.Services;
-using DeclaredPersonsAnalyzer.CommandLineHelpers.Options;
-using Fclp;
-using Newtonsoft.Json;
+﻿using DeclaredPersonsAnalyzer.CmdControllers;
+using DeclaredPersonsAnalyzer.CommandLineHelpers.Setups;
 
 namespace DeclaredPersonsAnalyzer;
 
 public class AppRunnerService : IAppRunnerService
 {
-    private readonly IDeclaredPersonODataService _declaredPersonODataService;
+    private readonly IDeclaredPersonsAnalyzerController _declaredPersonsAnalyzerController;
 
-    public AppRunnerService(IDeclaredPersonODataService declaredPersonODataService)
+    public AppRunnerService(IDeclaredPersonsAnalyzerController declaredPersonsAnalyzerController)
     {
-        _declaredPersonODataService = declaredPersonODataService;
+        _declaredPersonsAnalyzerController = declaredPersonsAnalyzerController;
     }
 
-    public async Task RunAsync(DeclaredPersonAnalyserOptions? declaredPersonAnalyserOptions)
+    public async Task RunAsync(string[] args)
     {
-        var ss = declaredPersonAnalyserOptions;
+        var declaredPersonAnalyserOptions =
+            DeclaredPersonAnalyserCommandLineParserSetup.GetParsedCmdInputParameters(args);
 
-        var response = await _declaredPersonODataService.GetAll();
-        if (response.Succeeded)
+        if (declaredPersonAnalyserOptions != null)
         {
-            var json = JsonConvert.SerializeObject(new { data = response.Data }, Formatting.Indented, new JsonSerializerSettings
-            {
-                ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
-            });
+            var executeRes = await _declaredPersonsAnalyzerController.Execute(declaredPersonAnalyserOptions);
 
-            const string path = "./JsonResult/data.json";
-            var folder = Path.GetDirectoryName(path);
-            if (!Directory.Exists(folder))
-                Directory.CreateDirectory(folder);
-
-            await File.WriteAllTextAsync(path, json);
+            if (!executeRes.Succeeded)
+                throw new Exception(executeRes.Messages.Aggregate((a, b) => a + ", " + b));
         }
-        Console.WriteLine("Congrats! It is working");
+
+        throw new Exception("Options for declared person analyzer are not defined!");
     }
 }
 
 public interface IAppRunnerService
 {
-    Task RunAsync(DeclaredPersonAnalyserOptions? declaredPersonsAnalyserCmdParseResult);
+    Task RunAsync(string[] args);
 }

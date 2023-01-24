@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 
-namespace DeclaredPersonsAnalyzer.CommandLineHelpers.Options;
+namespace DeclaredPersonsAdapter.Application.Requests.DeclaredPersonAnalyser;
 
-public class DeclaredPersonAnalyserOptions
+public class DeclaredPersonAnalyserOptionsRequest
 {
     [Description("source")]
     public string? Source { get; set; }
@@ -11,13 +11,13 @@ public class DeclaredPersonAnalyserOptions
     public int District { get; set; }
 
     [Description("year")]
-    public int Year { get; set; }
+    public int? Year { get; set; }
 
     [Description("month")]
-    public int Month { get; set; }
+    public int? Month { get; set; }
 
     [Description("day")]
-    public int Day { get; set; }
+    public int? Day { get; set; }
 
     [Description("limit")]
     public int Limit { get; set; }
