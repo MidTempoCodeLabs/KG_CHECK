@@ -1,4 +1,5 @@
-﻿using Shared.Wrapper.Enums;
+﻿using FluentValidation.Results;
+using Shared.Wrapper.Enums;
 using Shared.Wrapper.Interfaces;
 
 namespace Shared.Wrapper;
@@ -18,22 +19,22 @@ public class Result : IResult
 
     public static IResult Fail()
     {
-        return new Result { Succeeded = false };
+        return new Result {Succeeded = false};
     }
 
     public static IResult Fail(string message, ResultMessageType? resultMessageType = null)
     {
-        var result = new Result { Succeeded = false, Messages = new List<string> { message } };
+        var result = new Result {Succeeded = false, Messages = new List<string> {message}};
 
         if (resultMessageType != null)
             result.ResultMessageType = resultMessageType.Value;
 
         return result;
     }
-    
+
     public static IResult Fail(List<string> messages, ResultMessageType? resultMessageType = null)
     {
-        var result = new Result { Succeeded = false, Messages = messages };
+        var result = new Result {Succeeded = false, Messages = messages};
 
         if (resultMessageType != null)
             result.ResultMessageType = resultMessageType.Value;
@@ -43,7 +44,7 @@ public class Result : IResult
 
     public static IResult Fail(List<string> messages)
     {
-        return new Result { Succeeded = false, Messages = messages };
+        return new Result {Succeeded = false, Messages = messages};
     }
 
     public static Task<IResult> FailAsync()
@@ -65,7 +66,15 @@ public class Result : IResult
     {
         return Task.FromResult(Fail(messages));
     }
-    
+
+    public static Task<IResult> FailAsync(List<ValidationFailure> validationFailures)
+    {
+        var errorMessages = new List<string>();
+        validationFailures.ForEach(err => { errorMessages.Add($"{err.PropertyName}:{err.ErrorMessage}"); });
+
+        return Task.FromResult(Fail(errorMessages));
+    }
+
     public static Task<IResult> FailAsync(List<string> messages, ResultMessageType messageType)
     {
         return Task.FromResult(Fail(messages, messageType));
@@ -73,17 +82,17 @@ public class Result : IResult
 
     public static IResult Success()
     {
-        return new Result { Succeeded = true };
+        return new Result {Succeeded = true};
     }
 
     public static IResult Success(string message)
     {
-        return new Result { Succeeded = true, Messages = new List<string> { message } };
+        return new Result {Succeeded = true, Messages = new List<string> {message}};
     }
-    
+
     public static IResult Success(ResultMessageType messageType)
     {
-        return new Result { Succeeded = true, ResultMessageType = messageType};
+        return new Result {Succeeded = true, ResultMessageType = messageType};
     }
 
     public static Task<IResult> SuccessAsync()
@@ -127,12 +136,12 @@ public class Result<T> : Result, IResult<T>
 
     public new static Result<T> Fail()
     {
-        return new Result<T> { Succeeded = false };
+        return new Result<T> {Succeeded = false};
     }
 
     public new static Result<T> Fail(string message, ResultMessageType? resultMessageType = null)
     {
-        var result = new Result<T> { Succeeded = false, Messages = new List<string> { message } };
+        var result = new Result<T> {Succeeded = false, Messages = new List<string> {message}};
 
         if (resultMessageType != null)
             result.ResultMessageType = resultMessageType.Value;
@@ -142,7 +151,7 @@ public class Result<T> : Result, IResult<T>
 
     public new static Result<T> Fail(List<string> messages)
     {
-        return new Result<T> { Succeeded = false, Messages = messages };
+        return new Result<T> {Succeeded = false, Messages = messages};
     }
 
     public new static Task<Result<T>> FailAsync()
@@ -167,32 +176,32 @@ public class Result<T> : Result, IResult<T>
 
     public new static Result<T> Success()
     {
-        return new Result<T> { Succeeded = true };
+        return new Result<T> {Succeeded = true};
     }
 
     public new static Result<T> Success(string message)
     {
-        return new Result<T> { Succeeded = true, Messages = new List<string> { message } };
+        return new Result<T> {Succeeded = true, Messages = new List<string> {message}};
     }
 
     public static Result<T> Success(T data)
     {
-        return new Result<T> { Succeeded = true, Data = data };
+        return new Result<T> {Succeeded = true, Data = data};
     }
 
     public static Result<T> Success(T data, string message)
     {
-        return new Result<T> { Succeeded = true, Data = data, Messages = new List<string> { message } };
+        return new Result<T> {Succeeded = true, Data = data, Messages = new List<string> {message}};
     }
 
     public static Result<T> Success(T data, ResultMessageType messageType)
     {
-        return new Result<T> { Succeeded = true, Data = data, ResultMessageType = messageType };
+        return new Result<T> {Succeeded = true, Data = data, ResultMessageType = messageType};
     }
 
     public static Result<T> Success(T data, List<string> messages)
     {
-        return new Result<T> { Succeeded = true, Data = data, Messages = messages };
+        return new Result<T> {Succeeded = true, Data = data, Messages = messages};
     }
 
     public new static Task<Result<T>> SuccessAsync()

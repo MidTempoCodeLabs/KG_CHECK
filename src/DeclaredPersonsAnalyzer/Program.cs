@@ -14,6 +14,7 @@ public class Program
 {
     public static async Task Main(string[] args)
     {
+
         var builder = new ConfigurationBuilder();
         BuildConfig(builder);
 
@@ -31,12 +32,18 @@ public class Program
                 {
                     services.AddApplicationLayer();
 
+                    services.AddInfrastructureMappings();
                     services.AddRepositories();
+                    
                     services.AddApplicationServices();
-
+                    
                     // services.AddSharedInfrastructure();
 
                     services.AddAdapterDependencies();
+
+                    services.AddValidators();
+                    
+                    services.AddAppCmdControllers();
 
                     services.AddTransient<IAppRunnerService, AppRunnerService>();
                 })
@@ -44,7 +51,7 @@ public class Program
                 .Build();
 
             var entryPoint = ActivatorUtilities.CreateInstance<AppRunnerService>(host.Services);
-            await entryPoint.RunAsync();
+            await entryPoint.RunAsync(args);
         }
         catch (Exception ex)
         {
