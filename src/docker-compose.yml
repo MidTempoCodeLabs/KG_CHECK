@@ -1,0 +1,13 @@
+version: '3.4'
+services:
+  app-api.jeanedwards:
+    image: '${DOCKER_REGISTRY-}declared-persons-analyzer'
+    build:
+      context: .
+      dockerfile: DeclaredPersonsAnalyzer/Dockerfile
+    container_name: declared-persons-analyzer
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+networks:
+   src_je-jwilder-nginx:
+    external: true
