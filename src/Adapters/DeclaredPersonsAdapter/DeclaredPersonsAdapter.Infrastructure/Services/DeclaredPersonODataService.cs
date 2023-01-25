@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Linq;
 using AutoMapper;
 using DeclaredPersonsAdapter.Application.Enums;
 using DeclaredPersonsAdapter.Application.Interfaces.Repositories;
@@ -56,17 +57,17 @@ public class DeclaredPersonODataService : IDeclaredPersonODataService
             var declaredPersonsResponse = (await _declaredPersonODataRepository.GetAllByRequestedOptionsAsync(request)).ToList();
             var districtName = declaredPersonsResponse.First().district_name;
 
-            var summaryResults = GetSummaryResults(request, declaredPersonsResponse, districtName);
+            var summaryResults = GetSummaryResults(request, declaredPersonsResponse, districtName).Take(request.Limit).ToList();
 
             var maxValue = summaryResults.Max(s => s.Value);
             var minValue = summaryResults.Min(s => s.Value);
             var averageValue = (int)Math.Round(summaryResults.Average(s => s.Value));
 
             var maxIncreaseInSummaryResults = summaryResults.OrderByDescending(s => s.Change).First();
-            var maxIncrease = new MaxIncrease(maxIncreaseInSummaryResults.Change, districtName, maxIncreaseInSummaryResults.GroupFullName);
+            var maxIncrease = new MaxIncrease(maxIncreaseInSummaryResults.Change, maxIncreaseInSummaryResults.GroupFullName, districtName);
 
             var maxDropInSummaryResults = summaryResults.OrderBy(s => s.Change).First();
-            var maxDrop = new MaxDrop(maxDropInSummaryResults.Change, districtName, maxDropInSummaryResults.GroupFullName);
+            var maxDrop = new MaxDrop(maxDropInSummaryResults.Change, maxDropInSummaryResults.GroupFullName, districtName);
 
             return SummaryResult<GetDeclaredPersonGroupedResponse>.Success(summaryResults, maxValue, minValue, averageValue, maxDrop, maxIncrease);
         }
@@ -104,7 +105,7 @@ public class DeclaredPersonODataService : IDeclaredPersonODataService
         }
     }
 
-    private List<GetDeclaredPersonGroupedResponse> GetSummaryResults(DeclaredPersonAnalyserOptionsRequest request, IEnumerable<DeclaredPersons> declaredPersonsResponse, string districtName)
+    private IEnumerable<GetDeclaredPersonGroupedResponse> GetSummaryResults(DeclaredPersonAnalyserOptionsRequest request, IEnumerable<DeclaredPersons> declaredPersonsResponse, string districtName)
     {
         var resultMapped = _mapper.Map<List<GetDeclaredPersonResponse>>(declaredPersonsResponse);
 
@@ -130,7 +131,7 @@ public class DeclaredPersonODataService : IDeclaredPersonODataService
                         DistrictId = request.District,
                         DistrictName = districtName
                     };
-                }).ToList();
+                });
         }
 
         return resultMapped.Select((r, idx) => new GetDeclaredPersonGroupedResponse()
@@ -142,6 +143,6 @@ public class DeclaredPersonODataService : IDeclaredPersonODataService
             Day = r.Day,
             DistrictId = request.District,
             DistrictName = districtName
-        }).ToList();
+        });
     }
 }
