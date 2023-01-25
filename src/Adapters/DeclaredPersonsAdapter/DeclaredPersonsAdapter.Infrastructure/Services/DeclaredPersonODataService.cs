@@ -6,6 +6,7 @@ using DeclaredPersonsAdapter.Application.Requests.DeclaredPersonAnalyser;
 using DeclaredPersonsAdapter.Application.Responses.DeclaredPersons.Get;
 using DeclaredPersonsAdapter.Infrastructure.GroupingStrategies;
 using DeclaredPersonsAdapter.Infrastructure.Helpers;
+using EPakapojumiDataServiceContext;
 using Microsoft.Extensions.Logging;
 using Shared.Wrapper;
 using Shared.Wrapper.Interfaces;
@@ -50,14 +51,15 @@ public class DeclaredPersonODataService : IDeclaredPersonODataService
     {
         try
         {
-            var declaredPersonsResponse = (await _declaredPersonODataRepository.GetAllByRequestedOptionsAsync(request)).ToList();
+            var declaredPersonsResponse = await GetDeclaredPersonsByRequest(request);
             var districtName = declaredPersonsResponse.First().district_name;
 
             var declaredPersonsResponseMapped = _mapper.Map<List<GetDeclaredPersonResponse>>(declaredPersonsResponse);
+            declaredPersonsResponseMapped ??= new List<GetDeclaredPersonResponse>();
 
             var declaredPersonsWithValueCalculated = (request.DeclaredPersonsGroupingType != null
                 ? GetDeclaredPersonsGroupedAndCalculated(request, declaredPersonsResponseMapped, districtName)
-                : GetDeclaredPersonsCalculated(request, declaredPersonsResponseMapped, districtName)).ToList();
+                : GetDeclaredPersonsCalculated(request, declaredPersonsResponseMapped, districtName)).Take(request.Limit).ToList();
 
             return BuildSummaryResultFromDeclaredPersonsAndReturn(declaredPersonsWithValueCalculated, districtName);
         }
@@ -66,6 +68,11 @@ public class DeclaredPersonODataService : IDeclaredPersonODataService
             _logger.LogError(e.Message);
             throw;
         }
+    }
+
+    protected virtual async Task<List<DeclaredPersons>> GetDeclaredPersonsByRequest(DeclaredPersonAnalyserOptionsRequest request)
+    {
+        return (await _declaredPersonODataRepository.GetAllByRequestedOptionsAsync(request)).ToList();
     }
 
     private IEnumerable<GetDeclaredPersonGroupedResponse> GetDeclaredPersonsGroupedAndCalculated(

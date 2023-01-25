@@ -20,8 +20,7 @@ public class DeclaredPersonAnalyserOptionsRequest
     [Description("day")]
     public int? Day { get; set; }
 
-    [Description("limit")]
-    public int Limit { get; set; }
+    [Description("limit")] public int Limit { get; set; } = 100;
 
     [Description("out")]
     public string? Out { get; set; }
@@ -44,6 +43,6 @@ public class DeclaredPersonAnalyserOptionsRequest
 
     public bool IsGroupingByDayIncluded()
     {
-        return DeclaredPersonsGroupingType is Enums.DeclaredPersonsGroupingType.ByYearAndDay or Enums.DeclaredPersonsGroupingType.ByDay;
+        return DeclaredPersonsGroupingType is Enums.DeclaredPersonsGroupingType.ByYearAndDay or Enums.DeclaredPersonsGroupingType.ByDay or Enums.DeclaredPersonsGroupingType.ByMonthAndDay;
     }
 }

@@ -1,3 +1,8 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=0393b8a7_002D8ff4_002D4a62_002D8a96_002D31b03b7a7bca/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="TestGetGroupedSummary" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::BA5624A5-FBBA-4092-B96F-339D964D37B8::net6.0::DeclaredPersonsAdapter.IntegrationTests.ServicesTests.DeclaredPersonODataServiceIntegrationTests.TestGetGroupedSummary_ReturnsUnGrouped&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=204a9c48_002D3684_002D4fe4_002Db573_002D9e78e2bbdc53_0023DeclaredPersonsAnalyzer_002EUnitTests/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=3970d74d_002D6ac5_002D4388_002D8f00_002D695464b633b9_0023Application_002EUnitTests/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>

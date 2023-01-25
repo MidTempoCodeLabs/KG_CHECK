@@ -2,7 +2,7 @@
   "profiles": {
     "DeclaredPersonsAnalyzer": {
       "commandName": "Project",
-      "commandLineArgs": " -district 516 -limit 4 -group yd -out res.json"
+      "commandLineArgs": "-district 516 -limit 10 -group md -out re3ss.json"
     }
   }
 }

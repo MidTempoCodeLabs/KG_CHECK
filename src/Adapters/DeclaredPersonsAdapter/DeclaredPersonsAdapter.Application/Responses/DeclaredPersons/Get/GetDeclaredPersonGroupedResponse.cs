@@ -1,4 +1,5 @@
 ﻿using DeclaredPersonsAdapter.Application.Enums;
+using System.Text.Json.Serialization;
 
 namespace DeclaredPersonsAdapter.Application.Responses.DeclaredPersons.Get;
 
@@ -17,7 +18,7 @@ public class GetDeclaredPersonGroupedResponse
     public int DistrictId { get; set; }
 
     public string DistrictName { get; set; } = string.Empty;
-
+    
     public DeclaredPersonsGroupingType DeclaredPersonsGroupingType { get; set; }
 
     public string GroupFullName

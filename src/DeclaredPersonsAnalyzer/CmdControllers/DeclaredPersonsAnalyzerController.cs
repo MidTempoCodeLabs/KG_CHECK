@@ -37,6 +37,8 @@ public class DeclaredPersonsAnalyzerController : IDeclaredPersonsAnalyzerControl
             return await Result.FailAsync(reqValidationResult.Errors);
         }
 
+        cmdArguments.Out = FixProvidedOutFileName(cmdArguments);
+
         var request = _mapper.Map<DeclaredPersonAnalyserOptionsRequest>(cmdArguments);
 
         request.DeclaredPersonsGroupingType = cmdArguments.Group == null
@@ -50,15 +52,39 @@ public class DeclaredPersonsAnalyzerController : IDeclaredPersonsAnalyzerControl
 
         DisplayDataInTable(request, response);
 
-        var json = JsonConvert.SerializeObject(response, Formatting.Indented,
+        var json = JsonConvert.SerializeObject(new
+        {
+            data = response.Data,
+            summary = new
+            {
+                response.Max,
+                response.Min,
+                response.Average,
+                response.MaxDrop,
+                response.MaxIncrease,
+            }
+
+        }, Formatting.Indented,
             new JsonSerializerSettings
             {
                 ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
             });
 
-        await File.WriteAllTextAsync(request.Out ?? "res.json", json);
+        await File.WriteAllTextAsync(cmdArguments.Out, json);
 
         return await Result.SuccessAsync();
+    }
+
+    private string FixProvidedOutFileName(DeclaredPersonAnalyzerCmdArguments cmdArguments)
+    {
+        if (cmdArguments.Out == null)
+        {
+            return "res.json";
+        }
+
+        return cmdArguments.Out.EndsWith(".json", StringComparison.InvariantCultureIgnoreCase)
+            ? cmdArguments.Out
+            : cmdArguments.Out + ".json";
     }
 
     private static void DisplayDataInTable(DeclaredPersonAnalyserOptionsRequest request, SummaryResult<GetDeclaredPersonGroupedResponse> res)
@@ -68,13 +94,13 @@ public class DeclaredPersonsAnalyzerController : IDeclaredPersonsAnalyzerControl
             new("district_name"),
         };
 
-        if (request.DeclaredPersonsGroupingType == DeclaredPersonsGroupingType.ByYear)
+        if (request.IsGroupingByYearIncluded())
             headers.Add(new ColumnHeader("year"));
 
-        if (request.DeclaredPersonsGroupingType == DeclaredPersonsGroupingType.ByMonth)
+        if (request.IsGroupingByMonthIncluded())
             headers.Add(new ColumnHeader("month"));
 
-        if (request.DeclaredPersonsGroupingType == DeclaredPersonsGroupingType.ByDay)
+        if (request.IsGroupingByDayIncluded())
             headers.Add(new ColumnHeader("day"));
 
         headers.Add(new ColumnHeader("value"));
@@ -84,20 +110,32 @@ public class DeclaredPersonsAnalyzerController : IDeclaredPersonsAnalyzerControl
 
         res.Data.ForEach(d =>
         {
-            if (d.Year != null && d.Month != null && d.Day != null)
+            if (request.IsGroupingByYearIncluded() && request.IsGroupingByMonthIncluded() && request.IsGroupingByDayIncluded())
+            {
                 table.AddRow(d.DistrictName, d.Year, d.Month, d.Day, d.Value, d.Change);
-            else if (d.Year != null && d.Month != null)
+            }
+            else if (request.IsGroupingByYearIncluded() && request.IsGroupingByMonthIncluded())
+            {
                 table.AddRow(d.DistrictName, d.Year, d.Month, d.Value, d.Change);
-            else if (d.Year != null && d.Day != null)
-                table.AddRow(d.DistrictName, d.Year, d.Value, d.Change);
-            else if (d.Month != null && d.Day != null)
+            }
+            else if (request.IsGroupingByYearIncluded() && request.IsGroupingByDayIncluded())
+            {
+                table.AddRow(d.DistrictName, d.Year, d.Day, d.Value, d.Change);
+            }
+            else if (request.IsGroupingByMonthIncluded() && request.IsGroupingByDayIncluded())
+            {
+                table.AddRow(d.DistrictName, d.Month, d.Day, d.Value, d.Change);
+            }
+            else if (request.IsGroupingByMonthIncluded())
+            {
                 table.AddRow(d.DistrictName, d.Month, d.Value, d.Change);
-            else if (d.Month != null)
-                table.AddRow(d.DistrictName, d.Month, d.Value, d.Change);
-            else if (d.Year != null)
+            }
+            else if (request.IsGroupingByYearIncluded())
+            {
                 table.AddRow(d.DistrictName, d.Year, d.Value, d.Change);
+            }
             else
-                table.AddRow(d.Day, d.Value, d.Change);
+                table.AddRow(d.DistrictName, d.Day, d.Value, d.Change);
         });
 
         table.Config = TableConfiguration.MySqlSimple(); // Sets table formatting
