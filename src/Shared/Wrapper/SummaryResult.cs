@@ -53,10 +53,16 @@ public class SummaryResult<T> : Result
 
 public class MaxDrop : SummaryValueChange
 {
+    public MaxDrop(int value, string group, string name) : base(value, group, name)
+    {
+    }
 }
 
 public class MaxIncrease : SummaryValueChange
 {
+    public MaxIncrease(int value, string group, string name) : base(value, group, name)
+    {
+    }
 }
 
 public abstract class SummaryValueChange
@@ -64,4 +70,11 @@ public abstract class SummaryValueChange
     public int Value { get; set; }
     public string Group { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
+
+    public SummaryValueChange(int value, string group, string name)
+    {
+        Value = value;
+        Group = group;
+        Name = name;
+    }
 }

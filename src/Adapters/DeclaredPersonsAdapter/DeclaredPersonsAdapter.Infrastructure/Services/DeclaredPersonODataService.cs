@@ -53,40 +53,22 @@ public class DeclaredPersonODataService : IDeclaredPersonODataService
     {
         try
         {
-            var declaredPersonsResponse = await _declaredPersonODataRepository.GetAllByRequestedOptionsAsync(request);
+            var declaredPersonsResponse = (await _declaredPersonODataRepository.GetAllByRequestedOptionsAsync(request)).ToList();
             var districtName = declaredPersonsResponse.First().district_name;
 
-            var resultMapped = _mapper.Map<List<GetDeclaredPersonResponse>>(declaredPersonsResponse);
+            var summaryResults = GetSummaryResults(request, declaredPersonsResponse, districtName);
 
-            var summaryResults = new List<GetDeclaredPersonGroupedResponse>();
+            var maxValue = summaryResults.Max(s => s.Value);
+            var minValue = summaryResults.Min(s => s.Value);
+            var averageValue = (int)Math.Round(summaryResults.Average(s => s.Value));
 
-            if (request.Group != null)
-            {
-                var declaredPersonsGroupingType =
-                    DeclaredPersonsGroupingTypeMethods.GetEnumFromDescription(request.Group);
+            var maxIncreaseInSummaryResults = summaryResults.OrderByDescending(s => s.Change).First();
+            var maxIncrease = new MaxIncrease(maxIncreaseInSummaryResults.Change, districtName, maxIncreaseInSummaryResults.GroupFullName);
 
-                var groupedData = GroupDeclaredPersonsByGroupRequest(resultMapped, request.Group).ToList();
+            var maxDropInSummaryResults = summaryResults.OrderBy(s => s.Change).First();
+            var maxDrop = new MaxDrop(maxDropInSummaryResults.Change, districtName, maxDropInSummaryResults.GroupFullName);
 
-                summaryResults = groupedData
-                    .Select((g, i) =>
-                    {
-                        Debug.Assert(declaredPersonsGroupingType != null, nameof(declaredPersonsGroupingType) + " != null");
-                        return new GetDeclaredPersonGroupedResponse
-                        {
-                            Value = (int)g.Sum(d => d.Value),
-                            Change = i == 0 ? 0 : (int)g.Sum(d => d.Value) - (int)groupedData.ElementAt(i - 1).Sum(d => d.Value),
-                            Year = declaredPersonsGroupingType == DeclaredPersonsGroupingType.ByYear ? int.Parse(g.Key) : request.Year,
-                            Month = declaredPersonsGroupingType == DeclaredPersonsGroupingType.ByMonth ? int.Parse(g.Key) : request.Month,
-                            Day = declaredPersonsGroupingType == DeclaredPersonsGroupingType.ByDay ? int.Parse(g.Key) : request.Day,
-                            DeclaredPersonsGroupingType = declaredPersonsGroupingType.Value,
-                            DistrictId = request.District,
-                            DistrictName = districtName
-                        };
-                    }).ToList();
-            }
-
-            return SummaryResult<GetDeclaredPersonGroupedResponse>.Success(summaryResults, 2, 2, 2, new MaxDrop(),
-                new MaxIncrease());
+            return SummaryResult<GetDeclaredPersonGroupedResponse>.Success(summaryResults, maxValue, minValue, averageValue, maxDrop, maxIncrease);
         }
         catch (Exception e)
         {
@@ -120,5 +102,46 @@ public class DeclaredPersonODataService : IDeclaredPersonODataService
             default:
                 throw new Exception("Invalid value for req parameter");
         }
+    }
+
+    private List<GetDeclaredPersonGroupedResponse> GetSummaryResults(DeclaredPersonAnalyserOptionsRequest request, IEnumerable<DeclaredPersons> declaredPersonsResponse, string districtName)
+    {
+        var resultMapped = _mapper.Map<List<GetDeclaredPersonResponse>>(declaredPersonsResponse);
+
+        if (request.Group != null)
+        {
+            var declaredPersonsGroupingType =
+                DeclaredPersonsGroupingTypeMethods.GetEnumFromDescription(request.Group);
+
+            var groupedData = GroupDeclaredPersonsByGroupRequest(resultMapped, request.Group).ToList();
+
+            return groupedData
+                .Select((g, idx) =>
+                {
+                    Debug.Assert(declaredPersonsGroupingType != null, nameof(declaredPersonsGroupingType) + " != null");
+                    return new GetDeclaredPersonGroupedResponse
+                    {
+                        Value = (int)g.Sum(d => d.Value),
+                        Change = idx == 0 ? 0 : (int)g.Sum(d => d.Value) - (int)groupedData.ElementAt(idx - 1).Sum(d => d.Value),
+                        Year = declaredPersonsGroupingType == DeclaredPersonsGroupingType.ByYear ? int.Parse(g.Key) : request.Year,
+                        Month = declaredPersonsGroupingType == DeclaredPersonsGroupingType.ByMonth ? int.Parse(g.Key) : request.Month,
+                        Day = declaredPersonsGroupingType == DeclaredPersonsGroupingType.ByDay ? int.Parse(g.Key) : request.Day,
+                        DeclaredPersonsGroupingType = declaredPersonsGroupingType.Value,
+                        DistrictId = request.District,
+                        DistrictName = districtName
+                    };
+                }).ToList();
+        }
+
+        return resultMapped.Select((r, idx) => new GetDeclaredPersonGroupedResponse()
+        {
+            Value = (int)r.Value,
+            Change = idx == 0 ? 0 : (int)r.Value - (int)resultMapped.ElementAt(idx - 1).Value,
+            Year = r.Year,
+            Month = r.Month,
+            Day = r.Day,
+            DistrictId = request.District,
+            DistrictName = districtName
+        }).ToList();
     }
 }
