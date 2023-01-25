@@ -1,8 +1,9 @@
-﻿using Application.Configurations;
+﻿using System.Reflection;
+using Application.Configurations;
 using Application.Interfaces.Services;
 using DeclaredPersonsAdapter.Infrastructure.Extensions;
 using DeclaredPersonsAnalyzer.CmdControllers;
-using DeclaredPersonsAnalyzer.Validations.DeclaredPersonAnalyser;
+using DeclaredPersonsAnalyzer.Validations.DeclaredPersonAnalyserCmdArguments;
 using Infrastructure.Services;
 using Infrastructure.Shared.Services;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +13,12 @@ namespace DeclaredPersonsAnalyzer.Extensions;
 
 internal static class ServiceCollectionExtensions
 {
+    public static void AddDeclaredPersonsAnalyzerAppMappings(this IServiceCollection services)
+    {
+        services
+            .AddAutoMapper(Assembly.GetExecutingAssembly());
+    }
+
     internal static IServiceCollection AddSharedInfrastructure(this IServiceCollection services,
         IConfiguration configuration)
     {
@@ -35,7 +42,7 @@ internal static class ServiceCollectionExtensions
     internal static IServiceCollection AddValidators(this IServiceCollection services)
     {
         return services
-            .AddTransient<DeclaredPersonAnalyserOptionsRequestValidator>();
+            .AddTransient<DeclaredPersonAnalyzerCmdArgumentsValidator>();
     }
 
     internal static IServiceCollection AddAdapterDependencies(this IServiceCollection services)

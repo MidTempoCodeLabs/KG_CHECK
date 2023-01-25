@@ -7,5 +7,5 @@ namespace DeclaredPersonsAdapter.Application.Interfaces.Services;
 
 public interface IDeclaredPersonODataService : IBaseODataService<GetDeclaredPersonResponse>
 {
-    Task<SummaryResult<GetDeclaredPersonResponse>> GetSummary(DeclaredPersonAnalyserOptionsRequest request);
+    Task<SummaryResult<GetDeclaredPersonGroupedResponse>> GetGroupedSummary(DeclaredPersonAnalyserOptionsRequest request);
 }

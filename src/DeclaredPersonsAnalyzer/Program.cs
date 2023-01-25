@@ -32,17 +32,18 @@ public class Program
                 {
                     services.AddApplicationLayer();
 
+                    services.AddDeclaredPersonsAnalyzerAppMappings();
                     services.AddInfrastructureMappings();
                     services.AddRepositories();
-                    
+
                     services.AddApplicationServices();
-                    
+
                     // services.AddSharedInfrastructure();
 
                     services.AddAdapterDependencies();
 
                     services.AddValidators();
-                    
+
                     services.AddAppCmdControllers();
 
                     services.AddTransient<IAppRunnerService, AppRunnerService>();
