@@ -1,5 +1,4 @@
 ﻿using DeclaredPersonsAdapter.Application.Responses.DeclaredPersons.Get;
-using EPakapojumiDataServiceContext;
 
 namespace DeclaredPersonsAdapter.Application.Interfaces.GroupingStrategies;
 

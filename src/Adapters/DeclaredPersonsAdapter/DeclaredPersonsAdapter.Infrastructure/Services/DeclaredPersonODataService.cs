@@ -1,18 +1,12 @@
-﻿using System.Diagnostics;
-using System.Linq;
-using AutoMapper;
+﻿using AutoMapper;
 using DeclaredPersonsAdapter.Application.Enums;
-using DeclaredPersonsAdapter.Application.Interfaces.GroupingStrategies;
 using DeclaredPersonsAdapter.Application.Interfaces.Repositories;
 using DeclaredPersonsAdapter.Application.Interfaces.Services;
 using DeclaredPersonsAdapter.Application.Requests.DeclaredPersonAnalyser;
 using DeclaredPersonsAdapter.Application.Responses.DeclaredPersons.Get;
 using DeclaredPersonsAdapter.Infrastructure.GroupingStrategies;
 using DeclaredPersonsAdapter.Infrastructure.Helpers;
-using EPakapojumiDataServiceContext;
 using Microsoft.Extensions.Logging;
-using Microsoft.OData.Edm;
-using Shared.Extensions;
 using Shared.Wrapper;
 using Shared.Wrapper.Interfaces;
 

@@ -45,6 +45,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Adapters.Shared", "src\Adap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "src\Shared\Shared.csproj", "{F6CC5FC6-A6DC-4775-8B29-9AC6D2251E3D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Adapters", "Adapters", "{A9F5664E-D0EB-4673-8DD9-364F1F2A97FE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeclaredPersonsAdapter.IntegrationTests", "tests\IntegrationTests\Adapters\DeclaredPersonsAdapter.IntegrationTests\DeclaredPersonsAdapter.IntegrationTests.csproj", "{BA5624A5-FBBA-4092-B96F-339D964D37B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +99,10 @@ Global
 		{F6CC5FC6-A6DC-4775-8B29-9AC6D2251E3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6CC5FC6-A6DC-4775-8B29-9AC6D2251E3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6CC5FC6-A6DC-4775-8B29-9AC6D2251E3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA5624A5-FBBA-4092-B96F-339D964D37B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA5624A5-FBBA-4092-B96F-339D964D37B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA5624A5-FBBA-4092-B96F-339D964D37B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA5624A5-FBBA-4092-B96F-339D964D37B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -119,6 +127,8 @@ Global
 		{3DDBAC8B-AA5D-49F9-A525-40CFA5D14709} = {6F2AE851-40EF-40D7-9293-9EF1645E4541}
 		{A01F733E-CF72-4FF2-A921-D55A1A1F3CCE} = {9327BD9B-15E3-4C70-81B8-5E4979C46DBC}
 		{F6CC5FC6-A6DC-4775-8B29-9AC6D2251E3D} = {9DA020FD-89F9-4535-A153-5F95331F4C3D}
+		{A9F5664E-D0EB-4673-8DD9-364F1F2A97FE} = {89445C8E-16EB-4862-AE30-08690BF763DD}
+		{BA5624A5-FBBA-4092-B96F-339D964D37B8} = {A9F5664E-D0EB-4673-8DD9-364F1F2A97FE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {19C7C4D7-E20D-4F85-9C6C-4B2E64BB04B7}
