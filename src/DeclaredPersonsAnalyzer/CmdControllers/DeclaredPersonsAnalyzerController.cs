@@ -7,7 +7,6 @@ using DeclaredPersonsAdapter.Application.Responses.DeclaredPersons.Get;
 using DeclaredPersonsAnalyzer.Models;
 using DeclaredPersonsAnalyzer.Validations.DeclaredPersonAnalyserCmdArguments;
 using Newtonsoft.Json;
-using Shared.Extensions;
 using Shared.Wrapper;
 using Shared.Wrapper.Interfaces;
 
@@ -40,14 +39,18 @@ public class DeclaredPersonsAnalyzerController : IDeclaredPersonsAnalyzerControl
 
         var request = _mapper.Map<DeclaredPersonAnalyserOptionsRequest>(cmdArguments);
 
-        var res = await _declaredPersonODataService.GetGroupedSummary(request);
+        request.DeclaredPersonsGroupingType = cmdArguments.Group == null
+            ? null
+            : DeclaredPersonsGroupingTypeMethods.GetEnumFromDescription(cmdArguments.Group);
 
-        if (!res.Succeeded)
+        var response = await _declaredPersonODataService.GetGroupedSummary(request);
+
+        if (!response.Succeeded)
             return await Result.FailAsync();
 
-        DisplayDataInTable(request, res);
+        DisplayDataInTable(request, response);
 
-        var json = JsonConvert.SerializeObject(res, Formatting.Indented,
+        var json = JsonConvert.SerializeObject(response, Formatting.Indented,
             new JsonSerializerSettings
             {
                 ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
@@ -65,13 +68,13 @@ public class DeclaredPersonsAnalyzerController : IDeclaredPersonsAnalyzerControl
             new("district_name"),
         };
 
-        if (request.Group.Contains(DeclaredPersonsGroupingType.ByYear.GetDescription()))
+        if (request.DeclaredPersonsGroupingType == DeclaredPersonsGroupingType.ByYear)
             headers.Add(new ColumnHeader("year"));
 
-        if (request.Group.Contains(DeclaredPersonsGroupingType.ByMonth.GetDescription()))
+        if (request.DeclaredPersonsGroupingType == DeclaredPersonsGroupingType.ByMonth)
             headers.Add(new ColumnHeader("month"));
 
-        if (request.Group.Contains(DeclaredPersonsGroupingType.ByDay.GetDescription()))
+        if (request.DeclaredPersonsGroupingType == DeclaredPersonsGroupingType.ByDay)
             headers.Add(new ColumnHeader("day"));
 
         headers.Add(new ColumnHeader("value"));

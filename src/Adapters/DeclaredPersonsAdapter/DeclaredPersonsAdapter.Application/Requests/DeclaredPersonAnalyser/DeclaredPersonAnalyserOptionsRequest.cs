@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using DeclaredPersonsAdapter.Application.Enums;
+using System.ComponentModel;
 
 namespace DeclaredPersonsAdapter.Application.Requests.DeclaredPersonAnalyser;
 
@@ -24,7 +25,25 @@ public class DeclaredPersonAnalyserOptionsRequest
 
     [Description("out")]
     public string? Out { get; set; }
+    
+    public DeclaredPersonsGroupingType? DeclaredPersonsGroupingType { get; set; }
 
-    [Description("group")]
-    public string? Group { get; set; }
+    public bool IsGroupingByYearIncluded()
+    {
+        return DeclaredPersonsGroupingType is Enums.DeclaredPersonsGroupingType.ByYear
+            or Enums.DeclaredPersonsGroupingType.ByYearAndDay
+            or Enums.DeclaredPersonsGroupingType.ByYearAndMonth;
+    }
+
+    public bool IsGroupingByMonthIncluded()
+    {
+        return DeclaredPersonsGroupingType is Enums.DeclaredPersonsGroupingType.ByMonth
+            or Enums.DeclaredPersonsGroupingType.ByYearAndMonth
+            or Enums.DeclaredPersonsGroupingType.ByMonthAndDay;
+    }
+
+    public bool IsGroupingByDayIncluded()
+    {
+        return DeclaredPersonsGroupingType is Enums.DeclaredPersonsGroupingType.ByYearAndDay or Enums.DeclaredPersonsGroupingType.ByDay;
+    }
 }
